@@ -15,11 +15,11 @@ public class UserDto {
     private Long id;
 
     @NotNull(message="Name couldn't be null", groups= {OnCreate.class,OnUpdate.class})
-    @Length(max=255, message="Name length shuold be less 255 symbols",groups= {OnCreate.class,OnUpdate.class})
+    @Length(max=255, message="Name length should be less 255 symbols",groups= {OnCreate.class,OnUpdate.class})
     private String name;
 
     @NotNull(message="Username couldn't be null", groups= {OnCreate.class,OnUpdate.class})
-    @Length(max=255, message="Username length shuold be less 255 symbols",groups= {OnCreate.class,OnUpdate.class})
+    @Length(max=255, message="Username length should be less 255 symbols",groups= {OnCreate.class,OnUpdate.class})
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)//we can only write it but not send it

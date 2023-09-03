@@ -20,6 +20,7 @@ public class JwtEntityFactory {
                 mapToGrantedAuthorities(new ArrayList<>(user.getRoles()))
         );
     }
+    //here we bear a logic between spring security
     private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> roles) {
         return roles.stream().
                 map(Enum::name)
