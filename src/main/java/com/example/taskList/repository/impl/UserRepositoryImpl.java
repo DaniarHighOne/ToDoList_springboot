@@ -37,7 +37,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean isTaskOwner(Long userId, Task taskId) {
+    public boolean isTaskOwner(Long userId, Long taskId) {
         return false;
     }
 

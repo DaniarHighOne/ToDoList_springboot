@@ -18,6 +18,6 @@ public interface UserRepository {
 
     void create(User user);//create user with id set
     void insertUserRole(Long userId, Role role);//add role to user
-    boolean isTaskOwner(Long userId, Task taskId);
+    boolean isTaskOwner(Long userId, Long taskId);
     void delete(Long id); //user id
 }

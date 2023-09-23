@@ -11,8 +11,8 @@ spring:
       continue-on-error: false
       #data-locations: classpath:demo_data.sql
       #for not copying data into the tables comment this string
-  security:
+security:
     jwt:
-      secret: d3FlcXdlZnF3ZWZkc2ZhZHNmZGdsU0RLRkRTRlNGRERTR0ZER1M=
-      access: 3600000
-      refresh: 2592000000
+     secret: d3FlcXdlZnF3ZWZkc2ZhZHNmZGdsU0RLRkRTRlNGRERTR0ZER1M=
+     access: 3600000
+     refresh: 2592000000

@@ -1,5 +1,7 @@
 package com.example.taskList.config;
 
+import com.example.taskList.web.security.JwtTokenFilter;
+import com.example.taskList.web.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class ApplicationConfig {
 
     private final ApplicationContext applicationContext;
+    private final JwtTokenProvider jwtTokenProvider;
 
     /**
      * return every time a new hashed data

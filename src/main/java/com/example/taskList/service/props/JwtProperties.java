@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 @Data
 @ConfigurationProperties(prefix="security.jwt")//read data from .yaml file
 public class JwtProperties {
+
     private String secret;
-    private Long access;
-    private Long refresh;
+    private long access;
+    private long refresh;
 }
