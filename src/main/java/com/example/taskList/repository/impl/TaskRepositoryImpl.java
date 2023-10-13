@@ -4,6 +4,7 @@ import com.example.taskList.domain.exception.ResourceMappingException;
 import com.example.taskList.domain.task.Task;
 import com.example.taskList.repository.DataSourceConfig;
 import com.example.taskList.repository.TaskRepository;
+import com.example.taskList.repository.mappers.TaskRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -77,7 +78,7 @@ public class TaskRepositoryImpl implements TaskRepository {
                     return Optional.ofNullable(TaskRowMapper.mapRow(rs));
                 }
         } catch (SQLDataException throwables) {
-            throw new ResourceMappingException("Error while finding task by id")
+            throw new ResourceMappingException("Error while finding task by id");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -85,26 +86,101 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     public List<Task> findAllByUserId(Long userId) {
-        return null;
+        try {
+            Connection connection = dataSourceConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement(FIND_ALL_BY_USER_ID);
+            statement.setLong(1, userId);
+            try
+                    (ResultSet rs = statement.executeQuery()) {
+                return TaskRowMapper.mapRows(rs);
+            }
+        } catch (SQLDataException throwables) {
+            throw new ResourceMappingException("Error while finding all task by id");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void assignByUserID(Long taskId, Long userId) {
-
+        try {
+            Connection connection = dataSourceConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement(ASSIGN);
+            statement.setLong(1, taskId);
+            statement.setLong(2, userId);
+            statement.executeUpdate();
+        } catch (SQLDataException throwables) {
+            throw new ResourceMappingException("Error while assigning task by id");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void update(Task task) {
-
+        try {
+            Connection connection = dataSourceConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE);
+            statement.setString(1, task.getTitle());
+            if(task.getDescription() == null) {
+                statement.setNull(2, Types.VARCHAR);
+            } else {
+                statement.setString(2, task.getDescription());
+            }
+            if(task.getExpirationDate() == null) {
+                statement.setNull(3, Types.TIMESTAMP);
+            } else {
+                statement.setTimestamp(3,Timestamp.valueOf(task.getExpirationDate()));
+            }
+            statement.setString(4, task.getStatus().name());
+            statement.setLong(5, task.getId());
+            statement.executeUpdate();
+        } catch (SQLDataException throwables) {
+            throw new ResourceMappingException("Error while updating all task by id");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void create(Task task) {
+        try {
+            Connection connection = dataSourceConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement(CREATE, PreparedStatement.RETURN_GENERATED_KEYS);
+            statement.setString(1, task.getTitle());
+            if(task.getDescription() == null) {
+                statement.setNull(2, Types.VARCHAR);
+            } else {
+                statement.setString(2, task.getDescription());
+            }
+            if(task.getExpirationDate() == null) {
+                statement.setNull(3, Types.TIMESTAMP);
+            } else {
+                statement.setTimestamp(3,Timestamp.valueOf(task.getExpirationDate()));
+            }
+            statement.setString(4, task.getStatus().name());
+            statement.executeUpdate();
+            try (ResultSet rs = statement.getGeneratedKeys()){
+                rs.next();
+                task.setId(rs.getLong(1));
+            }
+        } catch (SQLDataException throwables) {
+            throw new ResourceMappingException("Error while creating all task by id");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     @Override
     public void delete(Long id) {
-
+        try{
+        Connection connection = dataSourceConfig.getConnection();
+        PreparedStatement statement = connection.prepareStatement(DELETE);
+        statement.setLong(1,id);
+        statement.executeUpdate();
+        } catch (SQLException throwables) {
+            throw  new ResourceMappingException("Error while deleting task by id");
+        }
     }
 }
