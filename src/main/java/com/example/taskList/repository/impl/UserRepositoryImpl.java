@@ -1,5 +1,6 @@
 package com.example.taskList.repository.impl;
 
+import com.example.taskList.domain.exception.ResourceMappingException;
 import com.example.taskList.domain.user.Role;
 import com.example.taskList.domain.user.User;
 import com.example.taskList.repository.DataSourceConfig;
@@ -25,7 +26,7 @@ public class UserRepositoryImpl implements UserRepository {
                    u.name as user_name,
                    u.username as user_username,
                    u.password as user_password,
-                   ur.role as user_role,
+                   ur.role as user_role_role,
                    t.id as task_id,
                    t.title as task_title,
                    t.description as task_description,
@@ -42,7 +43,7 @@ public class UserRepositoryImpl implements UserRepository {
                    u.name as user_name,
                    u.username as user_username,
                    u.password as user_password,
-                   ur.role as user_role,
+                   ur.role as user_role_role,
                    t.id as task_id,
                    t.title as task_title,
                    t.description as task_description,
@@ -97,39 +98,107 @@ public class UserRepositoryImpl implements UserRepository {
             try (ResultSet rs = statement.executeQuery()){
                 return Optional.ofNullable(UserRowMapper.mapRow(rs));
             }
-            statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new ResourceMappingException("Exception while finding user by id");
         }
     }
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return Optional.empty();
+        try {
+            Connection connection = dataSourceConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement(FIND_BY_USERNAME,
+                    ResultSet.TYPE_SCROLL_SENSITIVE,//look up whole result set
+                    ResultSet.CONCUR_READ_ONLY);
+            statement.setString(1,username);
+            try (ResultSet rs = statement.executeQuery()){
+                return Optional.ofNullable(UserRowMapper.mapRow(rs));
+            }
+        } catch (SQLException e) {
+            throw new ResourceMappingException("Exception while finding user by username");
+        }
     }
 
     @Override
     public void update(User user) {
+        try {
+            Connection connection = dataSourceConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE);
+            //need to set all fields
+            statement.setString(1,user.getName());
+            statement.setString(2,user.getUsername());
+            statement.setString(3,user.getPassword());
+            statement.setLong(4, user.getId());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new ResourceMappingException("Exception while updating user!");
+        }
 
     }
 
     @Override
     public void create(User user) {
+        try {
+            Connection connection = dataSourceConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement(CREATE, PreparedStatement.RETURN_GENERATED_KEYS);
+            //need to set all fields
+            statement.setString(1,user.getName());
+            statement.setString(2,user.getUsername());
+            statement.setString(3,user.getPassword());
+            statement.executeUpdate();
+            try (ResultSet rs = statement.getGeneratedKeys()){
+                rs.next();
+                user.setId(rs.getLong(1));
+            }
+        } catch (SQLException e) {
+            throw new ResourceMappingException("Exception while creating user!");
+        }
 
     }
 
     @Override
     public void insertUserRole(Long userId, Role role) {
+        try {
+            Connection connection = dataSourceConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement(INSERT_USER_ROLE);
+            //need to set all fields
+            statement.setLong(1,userId);
+            statement.setString(2,role.name());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new ResourceMappingException("Exception while add role to user!");
+        }
 
     }
 
     @Override
     public boolean isTaskOwner(Long userId, Long taskId) {
-        return false;
+        try {
+            Connection connection = dataSourceConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement(IS_TASK_OWNER);
+            //need to set all fields
+            statement.setLong(1,userId);
+            statement.setLong(2,taskId);
+            try (ResultSet rs = statement.executeQuery()) {
+                rs.next();
+                return rs.getBoolean(1);
+            }
+        } catch (SQLException e) {
+            throw new ResourceMappingException("Exception while checking task own-age user!");
+        }
     }
 
     @Override
     public void delete(Long id) {
-
+        try {
+            Connection connection = dataSourceConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement(INSERT_USER_ROLE);
+            //need to set all fields
+            statement.setLong(1,id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new ResourceMappingException("Exception while deleting user!");
+        }
     }
 }
