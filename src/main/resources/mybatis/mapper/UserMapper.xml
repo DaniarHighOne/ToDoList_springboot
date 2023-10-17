@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--here we add path to our repo-->
+<mapper namespace="com.example.taskList.repository.UserRepository">
+    <resultMap id="UserResultMap" type="com.example.taskList.domain.user.User" autoMapping="false">
+<!-- we map our data from userRepo by each object, od not forget about alias we used in db       -->
+        <id property="id" column="user_id"/>
+        <result property="name" column="user_name"/>
+        <result property="username" column="user_username"/>
+        <result property="password" column="user_password"/>
+        <collection property="roles"
+                    ofType="com.example.taskList.domain.user.Role"
+                    autoMapping="false">
+            <result property="name" column="user_role_role"/>
+        </collection>
+        <collection property="tasks"
+                    ofType="com.example.taskList.domain.task.Task"
+                    resultMap="com.example.taskList.repository.TaskRepository.TaskResultMap"
+                    autoMapping="false"/>
+    </resultMap>
+</mapper>

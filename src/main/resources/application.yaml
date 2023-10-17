@@ -11,6 +11,9 @@ spring:
       continue-on-error: false
       #data-locations: classpath:demo_data.sql
       #for not copying data into the tables comment this string
+#here we add some mybatis config using .xml: mybatis maps string to objects
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
 security:
     jwt:
      secret: d3FlcXdlZnF3ZWZkc2ZhZHNmZGdsU0RLRkRTRlNGRERTR0ZER1M=
