@@ -10,11 +10,13 @@
         <result property="name" column="user_name"/>
         <result property="username" column="user_username"/>
         <result property="password" column="user_password"/>
+<!--        for the set of roles we use collection name-->
         <collection property="roles"
                     ofType="com.example.taskList.domain.user.Role"
                     autoMapping="false">
             <result property="name" column="user_role_role"/>
         </collection>
+<!--        resultMap as reference to the another xml file we created-->
         <collection property="tasks"
                     ofType="com.example.taskList.domain.task.Task"
                     resultMap="com.example.taskList.repository.TaskRepository.TaskResultMap"

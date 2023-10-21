@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--here we add path to our repo-->
+<mapper namespace="com.example.taskList.repository.TaskRepository">
+    <resultMap id="TaskResultMap" type="com.example.taskList.domain.task.Task" autoMapping="false">
+        <!-- we map our data from userRepo by each object, od not forget about alias we used in db       -->
+        <id property="id" column="task_id"/>
+        <result property="title" column="task_title"/>
+        <result property="description" column="task_description"/>
+        <result property="expiration_date" column="task_expiration_date"/>
+        <result property="status" column="task_status"/>
+    </resultMap>
+    <!-- next we need to describe TaskInterface for mapping it to the object using command select     -->
+    <select id="findById" resultMap="TaskResultMap">
+        SElECT t.id as task_id,
+        t.title as task_title,
+        t.description as task_description,
+        t.expiration_date  as task_expiration_date,
+        t.status as task_status
+        from tasks t
+        where t.id = #{id}
+    </select>
+
+    <select id="findAllByUserId" resultMap="TaskResultMap">
+        SElECT t.id as task_id,
+        t.title as task_title,
+        t.description as task_description,
+        t.expiration_date  as task_expiration_date,
+        t.status as task_status
+        from tasks t
+        JOIN users_tasks ut on t.id = ut.task_id
+        where ut.user_id = #{userId}
+    </select>
+
+    <insert id="assignToUserById">
+        INSERT INTO users_tasks (task_id, user_id)
+        VALUES(#{taskId}, #{userId})
+    </insert>
+
+    <insert id="create" keyProperty="id" keyColumn="id" useGeneratedKeys="true">
+        INSERT INTO tasks (title, description, expiration_date, status)
+        VALUES (#{title}, #{description}, #{expirationDate}, #{status})
+    </insert>
+
+
+    <update id="update">
+        UPDATE tasks
+        SET title = #{title},
+        description = #{description},
+        expiration_date = #{expirationDate},
+        status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM tasks
+        WHERE id = #{id}
+    </delete>
+</mapper>

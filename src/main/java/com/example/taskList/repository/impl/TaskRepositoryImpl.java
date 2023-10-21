@@ -27,7 +27,7 @@ public class TaskRepositoryImpl implements TaskRepository {
                     t.expiration_date  as task_expiration_date,
                     t.status as task_status
                 from tasks t
-                where id = ?
+                where t.id = ?
             """;
     private final String FIND_ALL_BY_USER_ID =
             """
