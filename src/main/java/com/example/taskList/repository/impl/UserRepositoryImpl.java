@@ -193,7 +193,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void delete(Long id) {
         try {
             Connection connection = dataSourceConfig.getConnection();
-            PreparedStatement statement = connection.prepareStatement(INSERT_USER_ROLE);
+            PreparedStatement statement = connection.prepareStatement(DELETE);
             //need to set all fields
             statement.setLong(1,id);
             statement.executeUpdate();

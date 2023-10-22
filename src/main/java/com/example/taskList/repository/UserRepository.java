@@ -3,6 +3,7 @@ package com.example.taskList.repository;
 import com.example.taskList.domain.task.Task;
 import com.example.taskList.domain.user.Role;
 import com.example.taskList.domain.user.User;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ public interface UserRepository {
     void update(User user);//if ok thus nothing to return else got Exception
 
     void create(User user);//create user with id set
-    void insertUserRole(Long userId, Role role);//add role to user
-    boolean isTaskOwner(Long userId, Long taskId);
+    void insertUserRole(@Param("userId") Long userId, @Param("role") Role role);//add role to user
+    boolean isTaskOwner(@Param("userId") Long userId, @Param("taskId") Long taskId);
     void delete(Long id); //user id
 }
