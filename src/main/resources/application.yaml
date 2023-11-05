@@ -7,10 +7,14 @@ spring:
     driver-class-name: org.postgresql.Driver
   sql:
     init:
-      mode: always
+      mode: never
       continue-on-error: false
       #data-locations: classpath:demo_data.sql
-      #for not copying data into the tables comment this string
+  liquibase:
+    change-log: classpath:liquibase/db.changelog.yaml
+    enabled: true
+    default-schema: tasklist
+  #for not copying data into the tables comment this string
 #here we add some mybatis config using .xml: mybatis maps string to objects
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml

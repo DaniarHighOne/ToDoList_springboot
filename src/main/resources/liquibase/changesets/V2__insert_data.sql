@@ -4,9 +4,9 @@ values ('John Doe', 'johndoe@email.com', '$2a$12$oI.qnkVy/X46ZS7GqPMnLeTIIPj3DXD
 
 insert into tasks (title, description, status, expiration_date)
 values ('Buy chesse', null, 'TODO', '2023-08-27 12:00:00'),
-         ('Do homework', 'Math, physics', 'IN_PROGRESS', '2023-08-28 15:00:00'),
-         ('Clean rooms', null, 'DONE', null),
-         ('Call Mike', 'Ask about code review', 'TODO', '2023-08-29 10:00:00');
+       ('Do homework', 'Math, physics', 'IN_PROGRESS', '2023-08-28 15:00:00'),
+       ('Clean rooms', null, 'DONE', null),
+       ('Call Mike', 'Ask about code review', 'TODO', '2023-08-29 10:00:00');
 
 insert into users_tasks (task_id, user_id)
 values (1,2),
